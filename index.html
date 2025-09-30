@@ -62,16 +62,6 @@
     let saladas = [];
 
     function criarSaladaForm(id) {
-    return `
-      <div class="section salada-box" id="salada-${id}">
-        <h2>🍓 Salada ${id}</h2>
-        
-        <!-- aqui ficam os inputs da salada -->
-        
-        <button class="btn-voltar" onclick="removerSalada(${id})">❌ Excluir Salada</button>
-      </div>
-    `;
-    
       return `
         <div class="section salada-box" id="salada-${id}">
           <h2>🍓 Salada ${id}</h2>
@@ -115,15 +105,13 @@
 
           <label>Observações</label>
           <textarea id="obs-${id}" placeholder="Ex.: sem banana, pouca granola..."></textarea>
-        </div>
+        
+      <button class=\"btn-voltar\" onclick=\"removerSalada(${id})\">❌ Excluir Salada</button>
+</div>
       `;
     }
 
-    function adicionarSalada() {
-
-  }
-
-  function removerSalada(id) {
+    function removerSalada(id) {
     const salada = document.getElementById(`salada-${id}`);
     if (salada) {
       salada.remove();
