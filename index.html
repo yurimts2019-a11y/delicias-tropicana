@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delícias Tropicana - Pedido</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FFD700"/>
+  <link rel="icon" href="icon-192.png">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#fdf6f0; margin:0; padding:0; }
+    header { background: #FFD700; text-align:center; padding:20px; color:#333; }
+    header img { width:100px; border-radius:50%; }
+    header h1 { margin:10px 0 0; font-size:26px; }
+    .container { padding:20px; max-width:700px; margin:auto; }
+    .section { background:white; padding:20px; margin-bottom:25px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.08); }
+    .section h2 { margin-top:0; color:#e67e22; font-size:20px; margin-bottom:12px; }
+    select, input, textarea { width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; font-size:16px; margin-top:10px; }
+    textarea { resize: vertical; min-height: 70px; }
+    button { width:100%; padding:15px; border:none; border-radius:12px; cursor:pointer; font-size:18px; font-weight:bold; margin-top:15px; }
+    .btn-whatsapp { background:#25d366; color:white; }
+    .btn-whatsapp:hover { background:#1ebe5b; }
+    .btn-voltar { background:#FFD700; color:#333; }
+    .btn-add { background:#007bff; color:white; }
+    #resumoPedido { display:none; background:white; padding:25px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    #resumoPedido h2 { color:#27ae60; margin-top:0; }
+    .resumo-item { margin:10px 0; font-size:16px; }
+    .salada-box { border:1px dashed #ccc; padding:15px; border-radius:12px; margin-bottom:15px; background:#fafafa; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="icon-192.png" alt="Logo">
+    <h1>Delícias Tropicana</h1>
+  </header>
+
+  <div class="container" id="formulario">
+    <div class="section">
+      <h2>Seu Nome</h2>
+      <input type="text" id="cliente" placeholder="Digite seu nome" required>
+    </div>
+
+    <div id="saladasContainer"></div>
+
+    <button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
+    <button class="btn-whatsapp" onclick="revisarPedido()">👀 Revisar Pedido</button>
+  </div>
+
+  <div class="container" id="resumoPedido">
+    <h2>📋 Revisão do Pedido</h2>
+    <div id="resumoConteudo"></div>
+    <button class="btn-whatsapp" onclick="confirmarPedido()">✅ Confirmar e Enviar</button>
+    <button class="btn-voltar" onclick="voltarEdicao()">🔙 Voltar e Editar</button>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    let saladaCount = 0;
+    let saladas = [];
+
+    function criarSaladaForm(id) {
+      return `
+        <div class="section salada-box" id="salada-${id}">
+          <h2>🍓 Salada ${id}</h2>
+          <label>Tamanho</label>
+          <select id="tamanho-${id}">
+            <option value="300ml" data-preco="16">300 ml - R$16</option>
+            <option value="400ml" data-preco="20">400 ml - R$20</option>
+            <option value="500ml" data-preco="24">500 ml - R$24</option>
+          </select>
+
+          <label>Frutas (até 5)</label>
+          <select id="frutas-${id}" multiple size="7">
+            <option>Abacaxi</option>
+            <option>Morango</option>
+            <option>Mamão</option>
+            <option>Uva</option>
+            <option>Banana</option>
+            <option>Manga</option>
+            <option>Maçã</option>
+          </select>
+
+          <label>Frutas Extras (até 2) (+R$3 cada)</label>
+          <select id="extras-${id}" multiple size="7">
+            <option>Abacaxi</option>
+            <option>Morango</option>
+            <option>Mamão</option>
+            <option>Uva</option>
+            <option>Banana</option>
+            <option>Manga</option>
+            <option>Maçã</option>
+          </select>
+
+          <label>Acompanhamentos (até 5)</label>
+          <select id="acomp-${id}" multiple size="5">
+            <option>Creme de maracujá</option>
+            <option>Creme de ninho</option>
+            <option>Granola</option>
+            <option>Mel</option>
+            <option>Aveia</option>
+          </select>
+
+          <label>Observações</label>
+          <textarea id="obs-${id}" placeholder="Ex.: sem banana, pouca granola..."></textarea>
+        </div>
+      `;
+    }
+
+    function adicionarSalada() {
+      saladaCount++;
+      document.getElementById("saladasContainer").insertAdjacentHTML("beforeend", criarSaladaForm(saladaCount));
+    }
+
+    function revisarPedido() {
+      const cliente = document.getElementById("cliente").value.trim();
+      if (!cliente) { alert("Digite seu nome."); return; }
+
+      saladas = [];
+      let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
+      let totalGeral = 0;
+
+      for (let i=1; i<=saladaCount; i++) {
+        const tamanhoSel = document.getElementById(`tamanho-${i}`);
+        const tamanho = tamanhoSel.value;
+        const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
+
+        const frutas = Array.from(document.getElementById(`frutas-${i}`).selectedOptions).map(o=>o.value);
+        if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
+
+        const extras = Array.from(document.getElementById(`extras-${i}`).selectedOptions).map(o=>o.value);
+        if (extras.length > 2) { alert("Máximo 2 extras."); return; }
+
+        const acomp = Array.from(document.getElementById(`acomp-${i}`).selectedOptions).map(o=>o.value);
+        if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
+
+        const obs = document.getElementById(`obs-${i}`).value.trim();
+        let preco = precoBase + (extras.length * 3);
+        totalGeral += preco;
+
+        saladas.push({id:i,tamanho,frutas,extras,acomp,obs,preco});
+
+        resumoHTML += `
+          <div class='salada-box'>
+            <div class='resumo-item'><b>Salada ${i}</b></div>
+            <div class='resumo-item'><b>Tamanho:</b> ${tamanho}</div>
+            <div class='resumo-item'><b>Frutas:</b> ${frutas.join(", ")}</div>
+            <div class='resumo-item'><b>Extras:</b> ${extras.join(", ") || "Nenhum"}</div>
+            <div class='resumo-item'><b>Acompanhamentos:</b> ${acomp.join(", ") || "Nenhum"}</div>
+            ${obs ? `<div class='resumo-item'><b>Obs:</b> ${obs}</div>` : ""}
+            <div class='resumo-item'><b>Subtotal:</b> R$ ${preco},00</div>
+          </div>
+        `;
+      }
+
+      resumoHTML += `<div class='resumo-item'><b>Total do Pedido:</b> R$ ${totalGeral},00</div>`;
+
+      document.getElementById("resumoConteudo").innerHTML = resumoHTML;
+      document.getElementById("formulario").style.display = "none";
+      document.getElementById("resumoPedido").style.display = "block";
+    }
+
+    function voltarEdicao() {
+      document.getElementById("resumoPedido").style.display = "none";
+      document.getElementById("formulario").style.display = "block";
+    }
+
+    function confirmarPedido() {
+      let numero = "5565993321761";
+      let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
+      mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
+
+      let totalGeral = 0;
+
+      saladas.forEach(salada => {
+        mensagem += `*Salada ${salada.id}*%0A`;
+        mensagem += `- Tamanho: ${salada.tamanho}%0A`;
+        mensagem += `- Frutas: ${salada.frutas.join(", ")}%0A`;
+        if (salada.extras.length > 0) mensagem += `- Extras: ${salada.extras.join(", ")}%0A`;
+        if (salada.acomp.length > 0) mensagem += `- Acompanhamentos: ${salada.acomp.join(", ")}%0A`;
+        if (salada.obs) mensagem += `- Obs: ${salada.obs}%0A`;
+        mensagem += `- Subtotal: R$ ${salada.preco},00%0A%0A`;
+        totalGeral += salada.preco;
+      });
+
+      mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
+
+      const url = `https://wa.me/${numero}?text=${mensagem}`;
+      window.open(url, "_blank");
+    }
+
+    // Inicializar com uma salada padrão
+    adicionarSalada();
+  </script>
+</body>
+</html>
