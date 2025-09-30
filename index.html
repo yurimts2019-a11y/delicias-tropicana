@@ -62,6 +62,16 @@
     let saladas = [];
 
     function criarSaladaForm(id) {
+    return `
+      <div class="section salada-box" id="salada-${id}">
+        <h2>🍓 Salada ${id}</h2>
+        
+        <!-- aqui ficam os inputs da salada -->
+        
+        <button class="btn-voltar" onclick="removerSalada(${id})">❌ Excluir Salada</button>
+      </div>
+    `;
+    
       return `
         <div class="section salada-box" id="salada-${id}">
           <h2>🍓 Salada ${id}</h2>
@@ -110,6 +120,17 @@
     }
 
     function adicionarSalada() {
+
+  }
+
+  function removerSalada(id) {
+    const salada = document.getElementById(`salada-${id}`);
+    if (salada) {
+      salada.remove();
+    }
+  }
+
+  function adicionarSalada() {
       saladaCount++;
       document.getElementById("saladasContainer").insertAdjacentHTML("beforeend", criarSaladaForm(saladaCount));
     }
