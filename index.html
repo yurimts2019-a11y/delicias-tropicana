@@ -416,6 +416,41 @@ header {
   window.open(url, "_blank");
 }
 
+`;
+
+  document.querySelectorAll(".salada-box").forEach((box, i) => {
+    mensagem += `Salada ${i + 1}:
+`;
+
+    const tamanho = box.querySelector("select[id^='tamanho']").value;
+    mensagem += `Tamanho: ${tamanho}
+`;
+
+    const frutas = Array.from(box.querySelectorAll(".opcoes-frutas input:checked")).map(o => o.value);
+    if (frutas.length) mensagem += `Frutas: ${frutas.join(", ")}
+`;
+
+    const extras = Array.from(box.querySelectorAll(".opcoes-extras input:checked")).map(o => o.value);
+    if (extras.length) mensagem += `Extras: ${extras.join(", ")}
+`;
+
+    const acomp = Array.from(box.querySelectorAll(".opcoes-acomp input:checked")).map(o => o.value);
+    if (acomp.length) mensagem += `Acompanhamentos: ${acomp.join(", ")}
+`;
+
+    const obs = box.querySelector("textarea[id^='obs']").value;
+    if (obs) mensagem += `Obs: ${obs}
+`;
+
+    mensagem += `
+`;
+  });
+
+  alert(mensagem);
+  const url = `https://wa.me/SEUNUMERO?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, "_blank");
+}
+
     const tamanho = tamanhoSel.value;
 
     const frutasSel = box.querySelector("select[id^='frutas']");
@@ -452,10 +487,32 @@ header {
     adicionarSalada();
   </script>
 
+
 <script>
-let contadorPedidos = 1;
+if (!localStorage.getItem("contadorPedidos")) {
+  localStorage.setItem("contadorPedidos", "1");
+}
 function gerarNumeroPedido() {
-  return `#${String(contadorPedidos++).padStart(3, '0')}`;
+  let contador = parseInt(localStorage.getItem("contadorPedidos"), 10);
+  const numeroPedido = `#${String(contador).padStart(3, '0')}`;
+  localStorage.setItem("contadorPedidos", (contador + 1).toString());
+  return numeroPedido;
+}
+</script>
+
+<div style="text-align:center; margin-top:20px;">
+  <button onclick="resetarContador()" style="padding:8px 16px; border:none; border-radius:6px; background:#f44336; color:white; cursor:pointer;">
+    🔄 Resetar contador
+  </button>
+</div>
+
+
+<script>
+function resetarContador() {
+  if (confirm("Tem certeza que deseja resetar o contador de pedidos?")) {
+    localStorage.setItem("contadorPedidos", "1");
+    alert("Contador resetado! O próximo pedido será #001.");
+  }
 }
 </script>
 </body>
