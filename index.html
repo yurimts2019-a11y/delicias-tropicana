@@ -231,34 +231,6 @@ button.confirmar:hover {
   background: #1976d2;
 }
 
-
-
-#resumoPedido {
-  background: #f9f9f9;
-  border-radius: 12px;
-  padding: 20px;
-  font-size: 17px;
-  line-height: 1.6;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-top: 20px;
-  white-space: pre-line;
-}
-
-
-
-.resumo-frutas {
-  color: #4caf50;
-  font-weight: 600;
-}
-.resumo-extras {
-  color: #2196f3;
-  font-weight: 600;
-}
-.resumo-acomp {
-  color: #795548;
-  font-weight: 600;
-}
-
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -431,63 +403,18 @@ button.confirmar:hover {
     }
 
     function confirmarPedido() {
-  let mensagem = "Resumo do pedido
-----------------------------
+  let numero = "5565993321761";
+  let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
+  mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
 
-";
-  let htmlResumo = "<strong>Resumo do pedido</strong><br>----------------------------<br><br>";
+  let totalGeral = 0;
 
-  document.querySelectorAll(".salada-box").forEach((box, i) => {
-    mensagem += `Salada ${i + 1}:
-`;
-    htmlResumo += `<div><strong>Salada ${i + 1}:</strong><br>`;
+  const boxes = document.querySelectorAll(".salada-box");
+  boxes.forEach((box, index) => {
+    const i = index + 1;
 
-    const tamanho = box.querySelector("select[id^='tamanho']").value;
-    mensagem += `Tamanho: ${tamanho}
-`;
-    htmlResumo += `Tamanho: ${tamanho}<br>`;
-
-    const frutas = Array.from(box.querySelectorAll(".opcoes-frutas input:checked")).map(o => o.value);
-    if (frutas.length) {
-      mensagem += `Frutas: ${frutas.join(", ")}
-`;
-      htmlResumo += `<span class='resumo-frutas'>Frutas:</span> ${frutas.join(", ")}<br>`;
-    }
-
-    const extras = Array.from(box.querySelectorAll(".opcoes-extras input:checked")).map(o => o.value);
-    if (extras.length) {
-      mensagem += `Extras: ${extras.join(", ")}
-`;
-      htmlResumo += `<span class='resumo-extras'>Extras:</span> ${extras.join(", ")}<br>`;
-    }
-
-    const acomp = Array.from(box.querySelectorAll(".opcoes-acomp input:checked")).map(o => o.value);
-    if (acomp.length) {
-      mensagem += `Acompanhamentos: ${acomp.join(", ")}
-`;
-      htmlResumo += `<span class='resumo-acomp'>Acompanhamentos:</span> ${acomp.join(", ")}<br>`;
-    }
-
-    const obs = box.querySelector("textarea[id^='obs']").value;
-    if (obs) {
-      mensagem += `Obs: ${obs}
-`;
-      htmlResumo += `Obs: ${obs}<br>`;
-    }
-
-    mensagem += "
-----------------------------
-";
-    htmlResumo += "<br>----------------------------<br><br></div>";
-  });
-
-  // Atualizar o resumo estilizado na tela
-  document.getElementById("resumoPedido").innerHTML = htmlResumo;
-
-  // Enviar para WhatsApp
-  const url = `https://wa.me/SEUNUMERO?text=${encodeURIComponent(mensagem)}`;
-  window.open(url, "_blank");
-}
+    const tamanhoSel = box.querySelector("select[id^='tamanho']");
+    if (!tamanhoSel) { return; }
 
     const tamanho = tamanhoSel.value;
 
