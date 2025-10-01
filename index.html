@@ -123,7 +123,116 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h3.categoria {
+  font-weight: 600;
+  font-size: 18px;
+  margin-top: 20px;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+
+.opcoes-frutas label,
+.opcoes-extras label,
+.opcoes-acomp label {
+  display: inline-block;
+  margin: 6px;
+  padding: 10px 16px;
+  border-radius: 25px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.opcoes-frutas input,
+.opcoes-extras input,
+.opcoes-acomp input {
+  display: none;
+}
+
+/* Frutas (verde) */
+.opcoes-frutas label {
+  border: 2px solid #4caf50;
+  background: #f1f8e9;
+}
+.opcoes-frutas input:checked + span {
+  background: #4caf50;
+  color: #fff;
+  border-color: #388e3c;
+}
+
+/* Extras (azul) */
+.opcoes-extras label {
+  border: 2px solid #2196f3;
+  background: #e3f2fd;
+}
+.opcoes-extras input:checked + span {
+  background: #2196f3;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+/* Acompanhamentos (marrom) */
+.opcoes-acomp label {
+  border: 2px solid #795548;
+  background: #efebe9;
+}
+.opcoes-acomp input:checked + span {
+  background: #795548;
+  color: #fff;
+  border-color: #5d4037;
+}
+
+
+
+button {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Adicionar */
+button.adicionar {
+  background: #4caf50;
+  color: #fff;
+}
+button.adicionar:hover {
+  background: #388e3c;
+}
+
+/* Excluir */
+button.excluir {
+  background: #f44336;
+  color: #fff;
+}
+button.excluir:hover {
+  background: #c62828;
+}
+
+/* Confirmar */
+button.confirmar {
+  background: #2196f3;
+  color: #fff;
+  width: 100%;
+  margin-top: 20px;
+}
+button.confirmar:hover {
+  background: #1976d2;
+}
+
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -140,7 +249,7 @@ header {
 
     <div id="saladasContainer"></div>
 
-    <button class="btn-add" onclick="adicionarSalada()">➕ Adicionar nova Salada</button>
+    <button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
     <button class="btn-whatsapp" onclick="revisarPedido()">✅ Prosseguir com o pedido</button>
   </div>
 
