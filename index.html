@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Delícias Tropicana - Pedido</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#FFD700"/>
-  <link rel="icon" href="icon-192.png">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Delícias Tropicana - Pedido</title>
+<link href="manifest.json" rel="manifest"/>
+<meta content="#FFD700" name="theme-color">
+<link href="icon-192.png" rel="icon"/>
+<style>
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#fdf6f0; margin:0; padding:0; }
     header { background: #FFD700; text-align:center; padding:20px; color:#333; }
     header img { width:100px; border-radius:50%; }
@@ -208,45 +209,26 @@ header {
 }
 
 </style>
-</head>
+</meta></head>
 <body>
-
-  <header>
-    <img src="icon-192.png" alt="Logo">
-    <h1>Delícias Tropicana – Faça seu pedido online</h1>
-  </header>
-
-  <div class="container" id="formulario">
-    <div class="section">
-      <h2>Seu Nome</h2>
-      <input type="text" id="cliente" placeholder="Digite seu nome" required>
-    </div>
-
-    <div id="saladasContainer"></div>
-
-    <button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
-    <button class="btn-whatsapp" onclick="revisarPedido()">✅ Prosseguir com o pedido</button>
-  </div>
-
-  <div class="container" id="resumoPedido">
-    <h2>📋 Revisão do Pedido</h2>
-    <div id="resumoConteudo"></div>
-    <button class="btn-whatsapp" onclick="confirmarPedido()">✅ Confirmar e Enviar</button>
-    <button class="btn-voltar" onclick="voltarEdicao()">🔙 Voltar e Editar</button>
-  </div>
-
-  
-
-
-
-
-<div style="text-align:center; margin-top:20px;">
-  <button onclick="resetarContador()" style="padding:8px 16px; border:none; border-radius:6px; background:#f44336; color:white; cursor:pointer;">
-    🔄 Resetar contador
-  </button>
+<header>
+<img alt="Logo" src="icon-192.png"/>
+<h1>Delícias Tropicana – Faça seu pedido online</h1>
+</header>
+<div class="container" id="formulario">
+<div class="section">
+<h2>Seu Nome</h2>
+<input id="cliente" placeholder="Digite seu nome" required="" type="text"/>
 </div>
-
-
-
+<div id="saladasContainer"></div>
+<button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
+<button class="btn-whatsapp" onclick="revisarPedido()">✅ Prosseguir com o pedido</button>
+</div>
+<div class="container" id="resumoPedido">
+<h2>📋 Revisão do Pedido</h2>
+<div id="resumoConteudo"></div>
+<button class="btn-whatsapp" onclick="confirmarPedido()">✅ Confirmar e Enviar</button>
+<button class="btn-voltar" onclick="voltarEdicao()">🔙 Voltar e Editar</button>
+</div>
 </body>
 </html>
