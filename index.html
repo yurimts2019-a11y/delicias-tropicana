@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Delícias Tropicana - Pedido</title>
-<link href="manifest.json" rel="manifest"/>
-<meta content="#FFD700" name="theme-color">
-<link href="icon-192.png" rel="icon"/>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delícias Tropicana - Pedido</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FFD700"/>
+  <link rel="icon" href="icon-192.png">
+  <style>
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#fdf6f0; margin:0; padding:0; }
     header { background: #FFD700; text-align:center; padding:20px; color:#333; }
     header img { width:100px; border-radius:50%; }
@@ -124,111 +123,224 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-
-
-.opcoes-frutas label,
-.opcoes-extras label,
-.opcoes-acomp label {
-  display: inline-block;
-  margin: 4px;
-  padding: 6px 12px;
-  border: 2px solid #ff9800;
-  border-radius: 20px;
-  background: #fff3e0;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.opcoes-frutas input,
-.opcoes-extras input,
-.opcoes-acomp input {
-  display: none;
-}
-
-.opcoes-frutas input:checked + span,
-.opcoes-extras input:checked + span,
-.opcoes-acomp input:checked + span {
-  background: #ff9800;
-  color: white;
-  border-color: #e68900;
-}
-
-
-
-/* Estilo base */
-.opcoes-frutas label,
-.opcoes-extras label,
-.opcoes-acomp label {
-  display: inline-block;
-  margin: 4px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.opcoes-frutas input,
-.opcoes-extras input,
-.opcoes-acomp input {
-  display: none;
-}
-
-/* FRUTAS (verde) */
-.opcoes-frutas label {
-  border: 2px solid #4caf50;
-  background: #e8f5e9;
-}
-.opcoes-frutas input:checked + span {
-  background: #4caf50;
-  color: white;
-  border-color: #388e3c;
-}
-
-/* FRUTAS ADICIONAIS (azul) */
-.opcoes-extras label {
-  border: 2px solid #2196f3;
-  background: #e3f2fd;
-}
-.opcoes-extras input:checked + span {
-  background: #2196f3;
-  color: white;
-  border-color: #1976d2;
-}
-
-/* ACOMPANHAMENTOS (marrom) */
-.opcoes-acomp label {
-  border: 2px solid #795548;
-  background: #efebe9;
-}
-.opcoes-acomp input:checked + span {
-  background: #795548;
-  color: white;
-  border-color: #5d4037;
-}
-
 </style>
-</meta></head>
+</head>
 <body>
-<header>
-<img alt="Logo" src="icon-192.png"/>
-<h1>Delícias Tropicana – Faça seu pedido online</h1>
-</header>
-<div class="container" id="formulario">
-<div class="section">
-<h2>Seu Nome</h2>
-<input id="cliente" placeholder="Digite seu nome" required="" type="text"/>
-</div>
-<div id="saladasContainer"></div>
-<button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
-<button class="btn-whatsapp" onclick="revisarPedido()">✅ Prosseguir com o pedido</button>
-</div>
-<div class="container" id="resumoPedido">
-<h2>📋 Revisão do Pedido</h2>
-<div id="resumoConteudo"></div>
-<button class="btn-whatsapp" onclick="confirmarPedido()">✅ Confirmar e Enviar</button>
-<button class="btn-voltar" onclick="voltarEdicao()">🔙 Voltar e Editar</button>
-</div>
+
+  <header>
+    <img src="icon-192.png" alt="Logo">
+    <h1>Delícias Tropicana – Faça seu pedido online</h1>
+  </header>
+
+  <div class="container" id="formulario">
+    <div class="section">
+      <h2>Seu Nome</h2>
+      <input type="text" id="cliente" placeholder="Digite seu nome" required>
+    </div>
+
+    <div id="saladasContainer"></div>
+
+    <button class="btn-add" onclick="adicionarSalada()">➕ Adicionar Salada</button>
+    <button class="btn-whatsapp" onclick="revisarPedido()">✅ Prosseguir com o pedido</button>
+  </div>
+
+  <div class="container" id="resumoPedido">
+    <h2>📋 Revisão do Pedido</h2>
+    <div id="resumoConteudo"></div>
+    <button class="btn-whatsapp" onclick="confirmarPedido()">✅ Confirmar e Enviar</button>
+    <button class="btn-voltar" onclick="voltarEdicao()">🔙 Voltar e Editar</button>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    let saladaCount = 0;
+    let saladas = [];
+
+    function criarSaladaForm(id) {
+      return `
+        <div class="section salada-box" id="salada-${id}">
+          <h2>🍓 Salada de frutas ${id}</h2>
+
+          <label>Tamanho</label>
+          <select class="campo-espacado" id="tamanho-${id}">
+            <option value="300ml" data-preco="16">300 ml - R$16,00</option>
+            <option value="400ml" data-preco="20">400 ml - R$20,00</option>
+            <option value="500ml" data-preco="24">500 ml - R$24,00</option>
+          </select>
+
+          <label>Frutas (até 5 opções)</label>
+          <select class="campo-espacado" id="frutas-${id}" multiple size="7">
+            <option>Abacaxi</option>
+            <option>Morango</option>
+            <option>Mamão</option>
+            <option>Uva</option>
+            <option>Banana</option>
+            <option>Manga</option>
+            <option>Maçã</option>
+          </select>
+
+          <label>Frutas Adicionais (até 2 opções) (+R$3,00 cada)</label>
+          <select class="campo-espacado" id="extras-${id}" multiple size="7">
+            <option>Abacaxi</option>
+            <option>Morango</option>
+            <option>Mamão</option>
+            <option>Uva</option>
+            <option>Banana</option>
+            <option>Manga</option>
+            <option>Maçã</option>
+          </select>
+
+          <label>Acompanhamentos (até 5 opções)</label>
+          <select class="campo-espacado" id="acomp-${id}" multiple size="5">
+            <option>Creme de maracujá</option>
+            <option>Creme de ninho</option>
+            <option>Granola</option>
+            <option>Mel</option>
+            <option>Aveia</option>
+          </select>
+
+          <label>Observações</label>
+          <textarea class="campo-espacado" id="obs-${id}" placeholder="Ex.: pouca granola, aveia, etc..."></textarea>
+
+          <button class="btn-voltar" onclick="removerSalada(${id})">❌ Excluir Salada</button>
+        </div>
+      `;
+    }
+
+    function removerSalada(id) {
+      const salada = document.getElementById(`salada-${id}`);
+      if (salada) {
+        salada.remove();
+      }
+
+      const saladas = document.querySelectorAll(".salada-box");
+      saladas.forEach((box, index) => {
+        box.id = `salada-${index+1}`;
+        box.querySelector("h2").textContent = `🍓 Salada de frutas ${index+1}`;
+      });
+
+      saladaCount = saladas.length;
+    }
+
+    function adicionarSalada() {
+      saladaCount++;
+      document.getElementById("saladasContainer").insertAdjacentHTML("beforeend", criarSaladaForm(saladaCount));
+    }
+
+    function revisarPedido() {
+  const cliente = document.getElementById("cliente").value.trim();
+  if (!cliente) { alert("Digite seu nome."); return; }
+
+  saladas = [];
+  let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
+  let totalGeral = 0;
+
+  const boxes = document.querySelectorAll(".salada-box");
+  boxes.forEach((box, index) => {
+    const i = index + 1;
+
+    const tamanhoSel = box.querySelector("select[id^='tamanho']");
+    if (!tamanhoSel) { return; } // apenas pula esse box
+
+    const tamanho = tamanhoSel.value;
+    const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
+
+    const frutasSel = box.querySelector("select[id^='frutas']");
+    const frutas = frutasSel ? Array.from(frutasSel.selectedOptions).map(o=>o.value) : [];
+    if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
+
+    const extrasSel = box.querySelector("select[id^='extras']");
+    const extras = extrasSel ? Array.from(extrasSel.selectedOptions).map(o=>o.value) : [];
+    if (extras.length > 2) { alert("Máximo 2 extras."); return; }
+
+    const acompSel = box.querySelector("select[id^='acomp']");
+    const acomp = acompSel ? Array.from(acompSel.selectedOptions).map(o=>o.value) : [];
+    if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
+
+    const obsEl = box.querySelector("textarea[id^='obs']");
+    const obs = obsEl ? obsEl.value.trim() : "";
+
+    let preco = precoBase + (extras.length * 3);
+    totalGeral += preco;
+
+    saladas.push({id:i,tamanho,frutas,extras,acomp,obs,preco});
+
+    resumoHTML += `
+      <div class='salada-box'>
+        <div class='resumo-item'><b>Salada ${i}</b></div>
+        <div class='resumo-item'><b>Tamanho:</b> ${tamanho}</div>
+        <div class='resumo-item'><b>Frutas:</b> ${frutas.join(", ")}</div>
+        <div class='resumo-item'><b>Extras:</b> ${extras.join(", ") || "Nenhum"}</div>
+        <div class='resumo-item'><b>Acompanhamentos:</b> ${acomp.join(", ") || "Nenhum"}</div>
+        ${obs ? `<div class='resumo-item'><b>Obs:</b> ${obs}</div>` : ""}
+        <div class='resumo-item'><b>Subtotal:</b> R$ ${preco},00</div>
+      </div>
+    `;
+  });
+
+  resumoHTML += `<div class='resumo-item'><b>Total do Pedido:</b> R$ ${totalGeral},00</div>`;
+
+  document.getElementById("resumoConteudo").innerHTML = resumoHTML;
+  document.getElementById("formulario").style.display = "none";
+  document.getElementById("resumoPedido").style.display = "block";
+}
+
+    function voltarEdicao() {
+      document.getElementById("resumoPedido").style.display = "none";
+      document.getElementById("formulario").style.display = "block";
+    }
+
+    function confirmarPedido() {
+  let numero = "5565993321761";
+  let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
+  mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
+
+  let totalGeral = 0;
+
+  const boxes = document.querySelectorAll(".salada-box");
+  boxes.forEach((box, index) => {
+    const i = index + 1;
+
+    const tamanhoSel = box.querySelector("select[id^='tamanho']");
+    if (!tamanhoSel) { return; }
+
+    const tamanho = tamanhoSel.value;
+
+    const frutasSel = box.querySelector("select[id^='frutas']");
+    const frutas = frutasSel ? Array.from(frutasSel.selectedOptions).map(o=>o.value) : [];
+
+    const extrasSel = box.querySelector("select[id^='extras']");
+    const extras = extrasSel ? Array.from(extrasSel.selectedOptions).map(o=>o.value) : [];
+
+    const acompSel = box.querySelector("select[id^='acomp']");
+    const acomp = acompSel ? Array.from(acompSel.selectedOptions).map(o=>o.value) : [];
+
+    const obsEl = box.querySelector("textarea[id^='obs']");
+    const obs = obsEl ? obsEl.value.trim() : "";
+
+    const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
+    let preco = precoBase + (extras.length * 3);
+    totalGeral += preco;
+
+    mensagem += `*Salada ${i}*%0A`;
+    mensagem += `- Tamanho: ${tamanho}%0A`;
+    mensagem += `- Frutas: ${frutas.join(", ")}%0A`;
+    if (extras.length > 0) mensagem += `- Extras: ${extras.join(", ")}%0A`;
+    if (acomp.length > 0) mensagem += `- Acompanhamentos: ${acomp.join(", ")}%0A`;
+    if (obs) mensagem += `- Obs: ${obs}%0A`;
+    mensagem += `- Subtotal: R$ ${preco},00%0A%0A`;
+  });
+
+  mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
+
+  const url = `https://wa.me/${numero}?text=${mensagem}`;
+  window.open(url, "_blank");
+}
+
+    adicionarSalada();
+  </script>
 </body>
 </html>
