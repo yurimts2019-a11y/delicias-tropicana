@@ -378,18 +378,43 @@ header {
     }
 
     function confirmarPedido() {
-  let numero = "5565993321761";
-  let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
-  mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
+  const numeroPedido = gerarNumeroPedido();
+  let mensagem = `Pedido ${numeroPedido}
 
-  let totalGeral = 0;
+`;
 
-  const boxes = document.querySelectorAll(".salada-box");
-  boxes.forEach((box, index) => {
-    const i = index + 1;
+  document.querySelectorAll(".salada-box").forEach((box, i) => {
+    mensagem += `Salada ${i + 1}:
+`;
 
-    const tamanhoSel = box.querySelector("select[id^='tamanho']");
-    if (!tamanhoSel) { return; }
+    const tamanho = box.querySelector("select[id^='tamanho']").value;
+    mensagem += `Tamanho: ${tamanho}
+`;
+
+    const frutas = Array.from(box.querySelectorAll(".opcoes-frutas input:checked")).map(o => o.value);
+    if (frutas.length) mensagem += `Frutas: ${frutas.join(", ")}
+`;
+
+    const extras = Array.from(box.querySelectorAll(".opcoes-extras input:checked")).map(o => o.value);
+    if (extras.length) mensagem += `Extras: ${extras.join(", ")}
+`;
+
+    const acomp = Array.from(box.querySelectorAll(".opcoes-acomp input:checked")).map(o => o.value);
+    if (acomp.length) mensagem += `Acompanhamentos: ${acomp.join(", ")}
+`;
+
+    const obs = box.querySelector("textarea[id^='obs']").value;
+    if (obs) mensagem += `Obs: ${obs}
+`;
+
+    mensagem += `
+`;
+  });
+
+  alert(mensagem);
+  const url = `https://wa.me/SEUNUMERO?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, "_blank");
+}
 
     const tamanho = tamanhoSel.value;
 
@@ -426,5 +451,12 @@ header {
 
     adicionarSalada();
   </script>
+
+<script>
+let contadorPedidos = 1;
+function gerarNumeroPedido() {
+  return `#${String(contadorPedidos++).padStart(3, '0')}`;
+}
+</script>
 </body>
 </html>
