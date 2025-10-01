@@ -127,7 +127,21 @@
     }
 
     function removerSalada(id) {
-    const salada = document.getElementById(`salada-${id}`);
+  const salada = document.getElementById(`salada-${id}`);
+  if (salada) {
+    salada.remove();
+  }
+
+  // Reorganizar títulos e IDs
+  const saladas = document.querySelectorAll(".salada-box");
+  saladas.forEach((box, index) => {
+    box.id = `salada-${index+1}`;
+    box.querySelector("h2").textContent = `🍓 Salada de frutas ${index+1}`;
+  });
+
+  // Atualizar contador
+  saladaCount = saladas.length;
+}`);
     if (salada) {
       salada.remove();
     }
@@ -139,83 +153,96 @@
     }
 
     function revisarPedido() {
-      const cliente = document.getElementById("cliente").value.trim();
-      if (!cliente) { alert("Digite seu nome."); return; }
+  const cliente = document.getElementById("cliente").value.trim();
+  if (!cliente) { alert("Digite seu nome."); return; }
 
-      saladas = [];
-      let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
-      let totalGeral = 0;
+  saladas = [];
+  let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
+  let totalGeral = 0;
 
-      for (let i=1; i<=saladaCount; i++) {
-        const tamanhoSel = document.getElementById(`tamanho-${i}`);
-        const tamanho = tamanhoSel.value;
-        const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
+  const boxes = document.querySelectorAll(".salada-box");
+  boxes.forEach((box, index) => {
+    const i = index + 1;
+    const tamanhoSel = document.getElementById(`tamanho-${i}`);
+    const tamanho = tamanhoSel.value;
+    const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
 
-        const frutas = Array.from(document.getElementById(`frutas-${i}`).selectedOptions).map(o=>o.value);
-        if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
+    const frutas = Array.from(document.getElementById(`frutas-${i}`).selectedOptions).map(o=>o.value);
+    if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
 
-        const extras = Array.from(document.getElementById(`extras-${i}`).selectedOptions).map(o=>o.value);
-        if (extras.length > 2) { alert("Máximo 2 extras."); return; }
+    const extras = Array.from(document.getElementById(`extras-${i}`).selectedOptions).map(o=>o.value);
+    if (extras.length > 2) { alert("Máximo 2 extras."); return; }
 
-        const acomp = Array.from(document.getElementById(`acomp-${i}`).selectedOptions).map(o=>o.value);
-        if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
+    const acomp = Array.from(document.getElementById(`acomp-${i}`).selectedOptions).map(o=>o.value);
+    if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
 
-        const obs = document.getElementById(`obs-${i}`).value.trim();
-        let preco = precoBase + (extras.length * 3);
-        totalGeral += preco;
+    const obs = document.getElementById(`obs-${i}`).value.trim();
+    let preco = precoBase + (extras.length * 3);
+    totalGeral += preco;
 
-        saladas.push({id:i,tamanho,frutas,extras,acomp,obs,preco});
+    saladas.push({id:i,tamanho,frutas,extras,acomp,obs,preco});
 
-        resumoHTML += `
-          <div class='salada-box'>
-            <div class='resumo-item'><b>Salada ${i}</b></div>
-            <div class='resumo-item'><b>Tamanho:</b> ${tamanho}</div>
-            <div class='resumo-item'><b>Frutas:</b> ${frutas.join(", ")}</div>
-            <div class='resumo-item'><b>Extras:</b> ${extras.join(", ") || "Nenhum"}</div>
-            <div class='resumo-item'><b>Acompanhamentos:</b> ${acomp.join(", ") || "Nenhum"}</div>
-            ${obs ? `<div class='resumo-item'><b>Obs:</b> ${obs}</div>` : ""}
-            <div class='resumo-item'><b>Subtotal:</b> R$ ${preco},00</div>
-          </div>
-        `;
-      }
+    resumoHTML += `
+      <div class='salada-box'>
+        <div class='resumo-item'><b>Salada ${i}</b></div>
+        <div class='resumo-item'><b>Tamanho:</b> ${tamanho}</div>
+        <div class='resumo-item'><b>Frutas:</b> ${frutas.join(", ")}</div>
+        <div class='resumo-item'><b>Extras:</b> ${extras.join(", ") || "Nenhum"}</div>
+        <div class='resumo-item'><b>Acompanhamentos:</b> ${acomp.join(", ") || "Nenhum"}</div>
+        ${obs ? `<div class='resumo-item'><b>Obs:</b> ${obs}</div>` : ""}
+        <div class='resumo-item'><b>Subtotal:</b> R$ ${preco},00</div>
+      </div>
+    `;
+  });
 
-      resumoHTML += `<div class='resumo-item'><b>Total do Pedido:</b> R$ ${totalGeral},00</div>`;
+  resumoHTML += `<div class='resumo-item'><b>Total do Pedido:</b> R$ ${totalGeral},00</div>`;
 
-      document.getElementById("resumoConteudo").innerHTML = resumoHTML;
-      document.getElementById("formulario").style.display = "none";
-      document.getElementById("resumoPedido").style.display = "block";
-    }
+  document.getElementById("resumoConteudo").innerHTML = resumoHTML;
+  document.getElementById("formulario").style.display = "none";
+  document.getElementById("resumoPedido").style.display = "block";
+}
 
-    function voltarEdicao() {
+function voltarEdicao() {
       document.getElementById("resumoPedido").style.display = "none";
       document.getElementById("formulario").style.display = "block";
     }
 
     function confirmarPedido() {
-      let numero = "5565993321761";
-      let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
-      mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
+  let numero = "5565993321761";
+  let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
+  mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
 
-      let totalGeral = 0;
+  let totalGeral = 0;
 
-      saladas.forEach(salada => {
-        mensagem += `*Salada ${salada.id}*%0A`;
-        mensagem += `- Tamanho: ${salada.tamanho}%0A`;
-        mensagem += `- Frutas: ${salada.frutas.join(", ")}%0A`;
-        if (salada.extras.length > 0) mensagem += `- Extras: ${salada.extras.join(", ")}%0A`;
-        if (salada.acomp.length > 0) mensagem += `- Acompanhamentos: ${salada.acomp.join(", ")}%0A`;
-        if (salada.obs) mensagem += `- Obs: ${salada.obs}%0A`;
-        mensagem += `- Subtotal: R$ ${salada.preco},00%0A%0A`;
-        totalGeral += salada.preco;
-      });
+  const boxes = document.querySelectorAll(".salada-box");
+  boxes.forEach((box, index) => {
+    const i = index + 1;
 
-      mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
+    const tamanho = document.getElementById(`tamanho-${i}`).value;
+    const frutas = Array.from(document.getElementById(`frutas-${i}`).selectedOptions).map(o=>o.value);
+    const extras = Array.from(document.getElementById(`extras-${i}`).selectedOptions).map(o=>o.value);
+    const acomp = Array.from(document.getElementById(`acomp-${i}`).selectedOptions).map(o=>o.value);
+    const obs = document.getElementById(`obs-${i}`).value.trim();
 
-      const url = `https://wa.me/${numero}?text=${mensagem}`;
-      window.open(url, "_blank");
-    }
+    const precoBase = parseInt(document.getElementById(`tamanho-${i}`).selectedOptions[0].dataset.preco);
+    let preco = precoBase + (extras.length * 3);
+    totalGeral += preco;
 
-    // Inicializar com uma salada padrão
+    mensagem += `*Salada ${i}*%0A`;
+    mensagem += `- Tamanho: ${tamanho}%0A`;
+    mensagem += `- Frutas: ${frutas.join(", ")}%0A`;
+    if (extras.length > 0) mensagem += `- Extras: ${extras.join(", ")}%0A`;
+    if (acomp.length > 0) mensagem += `- Acompanhamentos: ${acomp.join(", ")}%0A`;
+    if (obs) mensagem += `- Obs: ${obs}%0A`;
+    mensagem += `- Subtotal: R$ ${preco},00%0A%0A`;
+  });
+
+  mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
+
+  const url = `https://wa.me/${numero}?text=${mensagem}`;
+  window.open(url, "_blank");
+}
+// Inicializar com uma salada padrão
     adicionarSalada();
   </script>
 </body>
