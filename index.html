@@ -127,21 +127,7 @@
     }
 
     function removerSalada(id) {
-  const salada = document.getElementById(`salada-${id}`);
-  if (salada) {
-    salada.remove();
-  }
-
-  // Reorganizar títulos e IDs
-  const saladas = document.querySelectorAll(".salada-box");
-  saladas.forEach((box, index) => {
-    box.id = `salada-${index+1}`;
-    box.querySelector("h2").textContent = `🍓 Salada de frutas ${index+1}`;
-  });
-
-  // Atualizar contador
-  saladaCount = saladas.length;
-}`);
+    const salada = document.getElementById(`salada-${id}`);
     if (salada) {
       salada.remove();
     }
