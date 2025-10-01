@@ -41,9 +41,93 @@
       }
     }
     .campo-espacado { margin-bottom: 20px; display: block; }
-  </style>
+  
+
+/* ==== Melhorias de design ==== */
+button {
+  background-color: #FFD700;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 6px 0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover {
+  background-color: #FFC107;
+}
+select, textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+.resumo-item {
+  background: #fff8dc;
+  padding: 8px;
+  border-radius: 8px;
+  margin: 4px 0;
+  border: 1px solid #eee;
+}
+@media (max-width: 600px) {
+  body {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .salada-box {
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+  button {
+    width: 100%;
+  }
+}
+
+
+
+body {
+  background-color: #FFFDE7; /* fundo bege claro */
+}
+
+.salada-box {
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+#resumoPedido {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
+
+header {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+</style>
 </head>
 <body>
+  <header>🍍 Delícias Tropicana</header>
+
   <header>
     <img src="icon-192.png" alt="Logo">
     <h1>Delícias Tropicana - Faça o seu pedido:</h1>
