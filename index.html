@@ -133,14 +133,12 @@
         salada.remove();
       }
 
-      // Reorganizar títulos e IDs
       const saladas = document.querySelectorAll(".salada-box");
       saladas.forEach((box, index) => {
         box.id = `salada-${index+1}`;
         box.querySelector("h2").textContent = `🍓 Salada de frutas ${index+1}`;
       });
 
-      // Atualizar contador
       saladaCount = saladas.length;
     }
 
@@ -150,55 +148,9 @@
     }
 
     function revisarPedido() {
-  const cliente = document.getElementById("cliente").value.trim();
-  if (!cliente) { alert("Digite seu nome."); return; }
+      const cliente = document.getElementById("cliente").value.trim();
+      if (!cliente) { alert("Digite seu nome."); return; }
 
-  saladas = [];
-  let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
-  let totalGeral = 0;
-
-  const boxes = document.querySelectorAll(".salada-box");
-  boxes.forEach((box, index) => {
-    const i = index + 1;
-
-    const tamanhoSel = box.querySelector("select[id^='tamanho']");
-    const tamanho = tamanhoSel.value;
-    const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
-
-    const frutas = Array.from(box.querySelector("select[id^='frutas']").selectedOptions).map(o=>o.value);
-    if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
-
-    const extras = Array.from(box.querySelector("select[id^='extras']").selectedOptions).map(o=>o.value);
-    if (extras.length > 2) { alert("Máximo 2 extras."); return; }
-
-    const acomp = Array.from(box.querySelector("select[id^='acomp']").selectedOptions).map(o=>o.value);
-    if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
-
-    const obs = box.querySelector("textarea[id^='obs']").value.trim();
-    let preco = precoBase + (extras.length * 3);
-    totalGeral += preco;
-
-    saladas.push({id:i,tamanho,frutas,extras,acomp,obs,preco});
-
-    resumoHTML += `
-      <div class='salada-box'>
-        <div class='resumo-item'><b>Salada ${i}</b></div>
-        <div class='resumo-item'><b>Tamanho:</b> ${tamanho}</div>
-        <div class='resumo-item'><b>Frutas:</b> ${frutas.join(", ")}</div>
-        <div class='resumo-item'><b>Extras:</b> ${extras.join(", ") || "Nenhum"}</div>
-        <div class='resumo-item'><b>Acompanhamentos:</b> ${acomp.join(", ") || "Nenhum"}</div>
-        ${obs ? `<div class='resumo-item'><b>Obs:</b> ${obs}</div>` : ""}
-        <div class='resumo-item'><b>Subtotal:</b> R$ ${preco},00</div>
-      </div>
-    `;
-  });
-
-  resumoHTML += `<div class='resumo-item'><b>Total do Pedido:</b> R$ ${totalGeral},00</div>`;
-
-  document.getElementById("resumoConteudo").innerHTML = resumoHTML;
-  document.getElementById("formulario").style.display = "none";
-  document.getElementById("resumoPedido").style.display = "block";
-}
       saladas = [];
       let resumoHTML = `<div class='resumo-item'><b>Cliente:</b> ${cliente}</div>`;
       let totalGeral = 0;
@@ -206,20 +158,21 @@
       const boxes = document.querySelectorAll(".salada-box");
       boxes.forEach((box, index) => {
         const i = index + 1;
-        const tamanhoSel = document.getElementById(`tamanho-${i}`);
+
+        const tamanhoSel = box.querySelector("select[id^='tamanho']");
         const tamanho = tamanhoSel.value;
         const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
 
-        const frutas = Array.from(document.getElementById(`frutas-${i}`).selectedOptions).map(o=>o.value);
+        const frutas = Array.from(box.querySelector("select[id^='frutas']").selectedOptions).map(o=>o.value);
         if (frutas.length > 5) { alert("Máximo 5 frutas."); return; }
 
-        const extras = Array.from(document.getElementById(`extras-${i}`).selectedOptions).map(o=>o.value);
+        const extras = Array.from(box.querySelector("select[id^='extras']").selectedOptions).map(o=>o.value);
         if (extras.length > 2) { alert("Máximo 2 extras."); return; }
 
-        const acomp = Array.from(document.getElementById(`acomp-${i}`).selectedOptions).map(o=>o.value);
+        const acomp = Array.from(box.querySelector("select[id^='acomp']").selectedOptions).map(o=>o.value);
         if (acomp.length > 5) { alert("Máximo 5 acompanhamentos."); return; }
 
-        const obs = document.getElementById(`obs-${i}`).value.trim();
+        const obs = box.querySelector("textarea[id^='obs']").value.trim();
         let preco = precoBase + (extras.length * 3);
         totalGeral += preco;
 
@@ -251,43 +204,43 @@
     }
 
     function confirmarPedido() {
-  let numero = "5565993321761";
-  let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
-  mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
+      let numero = "5565993321761";
+      let mensagem = `*🍍 Delícias Tropicana*%0A%0A`;
+      mensagem += `*Cliente:* ${document.getElementById("cliente").value}%0A%0A`;
 
-  let totalGeral = 0;
+      let totalGeral = 0;
 
-  const boxes = document.querySelectorAll(".salada-box");
-  boxes.forEach((box, index) => {
-    const i = index + 1;
+      const boxes = document.querySelectorAll(".salada-box");
+      boxes.forEach((box, index) => {
+        const i = index + 1;
 
-    const tamanhoSel = box.querySelector("select[id^='tamanho']");
-    const tamanho = tamanhoSel.value;
+        const tamanhoSel = box.querySelector("select[id^='tamanho']");
+        const tamanho = tamanhoSel.value;
 
-    const frutas = Array.from(box.querySelector("select[id^='frutas']").selectedOptions).map(o=>o.value);
-    const extras = Array.from(box.querySelector("select[id^='extras']").selectedOptions).map(o=>o.value);
-    const acomp = Array.from(box.querySelector("select[id^='acomp']").selectedOptions).map(o=>o.value);
-    const obs = box.querySelector("textarea[id^='obs']").value.trim();
+        const frutas = Array.from(box.querySelector("select[id^='frutas']").selectedOptions).map(o=>o.value);
+        const extras = Array.from(box.querySelector("select[id^='extras']").selectedOptions).map(o=>o.value);
+        const acomp = Array.from(box.querySelector("select[id^='acomp']").selectedOptions).map(o=>o.value);
+        const obs = box.querySelector("textarea[id^='obs']").value.trim();
 
-    const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
-    let preco = precoBase + (extras.length * 3);
-    totalGeral += preco;
+        const precoBase = parseInt(tamanhoSel.selectedOptions[0].dataset.preco);
+        let preco = precoBase + (extras.length * 3);
+        totalGeral += preco;
 
-    mensagem += `*Salada ${i}*%0A`;
-    mensagem += `- Tamanho: ${tamanho}%0A`;
-    mensagem += `- Frutas: ${frutas.join(", ")}%0A`;
-    if (extras.length > 0) mensagem += `- Extras: ${extras.join(", ")}%0A`;
-    if (acomp.length > 0) mensagem += `- Acompanhamentos: ${acomp.join(", ")}%0A`;
-    if (obs) mensagem += `- Obs: ${obs}%0A`;
-    mensagem += `- Subtotal: R$ ${preco},00%0A%0A`;
-  });
+        mensagem += `*Salada ${i}*%0A`;
+        mensagem += `- Tamanho: ${tamanho}%0A`;
+        mensagem += `- Frutas: ${frutas.join(", ")}%0A`;
+        if (extras.length > 0) mensagem += `- Extras: ${extras.join(", ")}%0A`;
+        if (acomp.length > 0) mensagem += `- Acompanhamentos: ${acomp.join(", ")}%0A`;
+        if (obs) mensagem += `- Obs: ${obs}%0A`;
+        mensagem += `- Subtotal: R$ ${preco},00%0A%0A`;
+      });
 
-  mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
+      mensagem += `*Total do Pedido:* R$ ${totalGeral},00`;
 
-  const url = `https://wa.me/${numero}?text=${mensagem}`;
-  window.open(url, "_blank");
-}
-    // Inicializar com uma salada padrão
+      const url = `https://wa.me/${numero}?text=${mensagem}`;
+      window.open(url, "_blank");
+    }
+
     adicionarSalada();
   </script>
 </body>
