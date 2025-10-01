@@ -123,25 +123,13 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-
-
-.preview-box {
-  background: #fff8dc;
-  border: 1px dashed #ccc;
-  border-radius: 8px;
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 13px;
-  color: #333;
-}
-
 </style>
 </head>
 <body>
 
   <header>
     <img src="icon-192.png" alt="Logo">
-    <h1>Delícias Tropicana - Faça o seu pedido:</h1>
+    <h1>Delícias Tropicana – Faça seu pedido online</h1>
   </header>
 
   <div class="container" id="formulario">
@@ -242,29 +230,7 @@ header {
       document.getElementById("saladasContainer").insertAdjacentHTML("beforeend", criarSaladaForm(saladaCount));
     }
 
-    
-function atualizarPreview(box) {
-  const tamanhoSel = box.querySelector("select[id^='tamanho']");
-  const frutasSel = box.querySelector("select[id^='frutas']");
-  const extrasSel = box.querySelector("select[id^='extras']");
-  const acompSel = box.querySelector("select[id^='acomp']");
-  const previewBox = box.querySelector(".preview-box");
-
-  const tamanho = tamanhoSel ? tamanhoSel.value : "";
-  const frutas = frutasSel ? Array.from(frutasSel.selectedOptions).map(o => o.value) : [];
-  const extras = extrasSel ? Array.from(extrasSel.selectedOptions).map(o => o.value) : [];
-  const acomp = acompSel ? Array.from(acompSel.selectedOptions).map(o => o.value) : [];
-
-  let preview = "";
-  if (tamanho) preview += "<b>Tamanho:</b> " + tamanho;
-  if (frutas.length > 0) preview += (preview ? "<br>" : "") + "<b>Frutas:</b> " + frutas.join(", ");
-  if (extras.length > 0) preview += (preview ? "<br>" : "") + "<b>Extras:</b> " + extras.join(", ");
-  if (acomp.length > 0) preview += (preview ? "<br>" : "") + "<b>Acompanhamentos:</b> " + acomp.join(", ");
-
-  previewBox.innerHTML = preview || "Prévia da salada aparecerá aqui...";
-}
-
-function revisarPedido() {
+    function revisarPedido() {
   const cliente = document.getElementById("cliente").value.trim();
   if (!cliente) { alert("Digite seu nome."); return; }
 
